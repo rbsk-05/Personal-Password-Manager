@@ -5,6 +5,7 @@ const AccessPage = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [isRotating, setIsRotating] = useState(false);
+
   const [form, setForm] = useState({ name: "", email: "", passphrase: "" });
   const [loginPass, setLoginPass] = useState("");
   const [message, setMessage] = useState("");
@@ -17,7 +18,7 @@ const AccessPage = () => {
     }, 1200); // matches animation time
   };
 
-  // ✅ Register user to backend
+  // ✅ Register user
   const handleRegister = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -45,7 +46,7 @@ const AccessPage = () => {
     }
   };
 
-  // ✅ Login user with passphrase
+  // ✅ Login with passphrase
   const handleLogin = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -61,9 +62,11 @@ const AccessPage = () => {
 
       if (res.ok) {
         setMessage("Vault unlocked! 🔓 Redirecting...");
+        // store user id for credentials dashboard
+        localStorage.setItem("userId", data.user._id);
         setTimeout(() => {
           setShowLogin(false);
-          window.location.href = "/dashboard"; // ✅ redirect to dashboard
+          window.location.href = "/dashboard"; // redirect to dashboard
         }, 1200);
       } else {
         setMessage(data.error || "Invalid passphrase ❌");
