@@ -30,12 +30,16 @@ export const loginUser = async (req, res) => {
     const { passphrase } = req.body;
     if (!passphrase) return res.status(400).json({ error: "Passphrase is required" });
 
-    // Compare passphrase with **all users**
+    const trimmedPass = passphrase.trim();
+    console.log("🔍 Incoming Passphrase:", JSON.stringify(trimmedPass));
+
     const users = await User.find({});
     let matchedUser = null;
 
     for (const user of users) {
-      const isMatch = await bcrypt.compare(passphrase, user.passphrase);
+      console.log("Checking against user:", user.email);
+      const isMatch = await bcrypt.compare(trimmedPass, user.passphrase);
+      console.log("Compare result:", isMatch);
       if (isMatch) {
         matchedUser = user;
         break;
@@ -47,10 +51,14 @@ export const loginUser = async (req, res) => {
 
     res.status(200).json({
       message: "Login successful",
-      user: { name: matchedUser.name, email: matchedUser.email, _id: matchedUser._id },
+      user: {
+        _id: matchedUser._id,
+        name: matchedUser.name,
+        email: matchedUser.email,
+      },
     });
   } catch (err) {
-    console.error(err);
+    console.error("Login Error:", err);
     res.status(500).json({ error: "Server error" });
   }
 };

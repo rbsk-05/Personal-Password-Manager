@@ -76,7 +76,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
-        <h1>Vault Credentials</h1>
+        <h1>My Locker</h1>
         <button
           className="add-btn"
           onClick={() => {
