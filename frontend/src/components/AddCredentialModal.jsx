@@ -17,7 +17,7 @@ const AddCredentialModal = ({ onClose, onSaved, editData, userId }) => {
 
   const handleSave = async () => {
     if (!userId) {
-      setMessage("❌ User not logged in!");
+      setMessage("User not logged in!");
       return;
     }
 
@@ -48,14 +48,14 @@ const AddCredentialModal = ({ onClose, onSaved, editData, userId }) => {
       const data = await res.json();
 
       if (res.ok) {
-        setMessage(editData ? "✏️ Credential updated!" : "✅ Credential saved!");
+        setMessage(editData ? "Credential updated!" : "Credential saved!");
         setTimeout(() => {
           setMessage("");
           onSaved();
           onClose();
         }, 1000);
       } else {
-        setMessage(data.error || "❌ Failed to save credential.");
+        setMessage(data.error || "Failed to save credential.");
       }
     } catch (err) {
       console.error(err);
@@ -79,6 +79,7 @@ const AddCredentialModal = ({ onClose, onSaved, editData, userId }) => {
           <option value="personal">Personal</option>
         </select>
 
+        <label>Title:</label>
         <input
           type="text"
           placeholder="Title (e.g. Netflix, My Phone)"
@@ -88,12 +89,14 @@ const AddCredentialModal = ({ onClose, onSaved, editData, userId }) => {
 
         {formData.type === "website" && (
           <>
+            <label>Website:</label>
             <input
               type="text"
               placeholder="Website (e.g. github.com)"
               value={formData.website}
               onChange={(e) => setFormData({ ...formData, website: e.target.value })}
             />
+            <label>Email Address:</label>
             <input
               type="email"
               placeholder="Email Address"
@@ -103,6 +106,7 @@ const AddCredentialModal = ({ onClose, onSaved, editData, userId }) => {
           </>
         )}
 
+        <label>Password / Passcode:</label>
         <input
           type="text"
           placeholder="Password / Passcode"
@@ -110,6 +114,7 @@ const AddCredentialModal = ({ onClose, onSaved, editData, userId }) => {
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
         />
 
+        <label>Notes:</label>
         <textarea
           placeholder="Notes (optional)"
           value={formData.notes}

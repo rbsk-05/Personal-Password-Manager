@@ -15,10 +15,9 @@ const AccessPage = () => {
     setTimeout(() => {
       setIsRotating(false);
       setShowLogin(true);
-    }, 1200); // matches animation time
+    }, 1200);
   };
 
-  // ✅ Register user
   const handleRegister = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -31,7 +30,6 @@ const AccessPage = () => {
       });
 
       const data = await res.json();
-
       if (res.ok) {
         setMessage("Registration successful! ✅ You can now unlock your vault.");
         setTimeout(() => {
@@ -41,12 +39,11 @@ const AccessPage = () => {
       } else {
         setMessage(data.error || "Registration failed ❌");
       }
-    } catch (err) {
+    } catch {
       setMessage("Server error. Try again later.");
     }
   };
 
-  // ✅ Login with passphrase
   const handleLogin = async (e) => {
     e.preventDefault();
     setMessage("");
@@ -59,25 +56,29 @@ const AccessPage = () => {
       });
 
       const data = await res.json();
-
       if (res.ok) {
         setMessage("Vault unlocked! 🔓 Redirecting...");
-        // store user id for credentials dashboard
         localStorage.setItem("userId", data.user._id);
         setTimeout(() => {
           setShowLogin(false);
-          window.location.href = "/dashboard"; // redirect to dashboard
+          window.location.href = "/dashboard";
         }, 1200);
       } else {
         setMessage(data.error || "Invalid passphrase ❌");
       }
-    } catch (err) {
+    } catch {
       setMessage("Server error. Try again later.");
     }
   };
 
   return (
     <div className="access-container">
+      {/* --- HEADER --- */}
+      <header className="app-header">
+        <h1>My Locker</h1>
+        <span className="tagline">Your personal credential vault</span>
+      </header>
+
       {/* --- VAULT --- */}
       <div className="vault-center">
         <div

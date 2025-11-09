@@ -8,6 +8,15 @@ const Dashboard = () => {
   const [editData, setEditData] = useState(null);
   const [toastMessage, setToastMessage] = useState("");
   const [visiblePasswords, setVisiblePasswords] = useState(new Set());
+  const [showMenu, setShowMenu] = useState(false);
+
+  useEffect(() => {
+  const handleClickOutside = (e) => {
+    if (!e.target.closest(".menu-container")) setShowMenu(false);
+  };
+  document.addEventListener("click", handleClickOutside);
+  return () => document.removeEventListener("click", handleClickOutside);
+}, []);
 
   // ✅ Get userId after login from localStorage
   const userId = localStorage.getItem("userId");
@@ -46,10 +55,10 @@ const Dashboard = () => {
       });
       if (res.ok) {
         setCredentials(credentials.filter((c) => c._id !== id));
-        setToastMessage("🗑️ Credential deleted successfully!");
+        setToastMessage("Credential deleted successfully!");
       } else {
         const data = await res.json();
-        setToastMessage(data.error || "❌ Failed to delete credential");
+        setToastMessage(data.error || "Failed to delete credential");
       }
     } catch (err) {
       console.error(err);
@@ -76,17 +85,41 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       <header className="dashboard-header">
-        <h1>My Locker</h1>
+  <h1>My Locker</h1>
+
+  {/* Hamburger Menu */}
+  <div className="menu-container">
+    <button
+      className="hamburger"
+      onClick={() => setShowMenu((prev) => !prev)}
+    >
+      ☰
+    </button>
+
+    {showMenu && (
+      <div className="menu-dropdown">
         <button
-          className="add-btn"
           onClick={() => {
             setEditData(null);
             setShowModal(true);
+            setShowMenu(false);
           }}
         >
-          + Add Credential
+          Add Credential
         </button>
-      </header>
+        <button
+          onClick={() => {
+            localStorage.removeItem("userId");
+            window.location.href = "/";
+          }}
+        >
+          Logout
+        </button>
+      </div>
+    )}
+  </div>
+</header>
+
 
       {toastMessage && <div className="toast-message">{toastMessage}</div>}
 
